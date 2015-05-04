@@ -1,0 +1,6 @@
+---
+
+do_ssh_keys: ""
+do_region: "sfo1"
+do_master_size: "1gb"
+do_node_size: "1gb"

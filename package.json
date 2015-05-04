@@ -1,0 +1,14 @@
+{
+  "name": "coreos-playbooks",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tim Smart <tim.smart@arisechurch.com>",
+  "dependencies": {
+    "async": "^0.9.0",
+    "nautical": "^0.1.2",
+    "optimist": "^0.6.1",
+    "provhost": "^0.1.0"
+  }
+}

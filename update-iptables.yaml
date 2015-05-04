@@ -1,0 +1,19 @@
+---
+
+- hosts: "k8s"
+  gather_facts: false
+  roles:
+    - "defunctzombie.coreos-bootstrap"
+
+  tasks:
+
+    - template:
+        src: "templates/rules-save.j2"
+        dest: "/var/lib/iptables/rules-save"
+      sudo: true
+
+    - service:
+        name: "iptables-restore"
+        state: "restarted"
+        enabled: true
+      sudo: true

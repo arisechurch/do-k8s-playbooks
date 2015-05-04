@@ -1,0 +1,30 @@
+---
+
+- hosts: "localhost"
+  vars:
+    ansible_connection: "local"
+    ansible_python_interpreter: "python"
+  tasks:
+
+    - set_fact:
+        master_host: "{{hostvars[groups['master'][0]]}}"
+
+    - template:
+        src: "templates/node.yaml.j2"
+        dest: "/tmp/user-data.yaml"
+
+    - command: >
+        tools/create-droplet.js
+        --ssh-keys {{do_ssh_keys}}
+        --region {{do_region}}
+        --size {{do_node_size}}
+        --user-data /tmp/user-data.yaml
+        --namespace k8s
+      register: "networks"
+
+    - set_fact:
+        networks: "{{networks.stdout | from_json}}"
+
+    - wait_for:
+        host: "{{networks.public.ip_address}}"
+        port: 22
