@@ -2,6 +2,11 @@
 
 Manage a k8s cluster on digitalocean.
 
+Comes with https://github.com/ARISEChurch/kubernetes-reverseproxy running on all
+nodes to load balance your services with `nginx`. Read the README.md for usage
+detail. It works best with round-robin DNS pointing to all your Kubernetes
+nodes!
+
 ## Prepare
 
 1. `npm install`
