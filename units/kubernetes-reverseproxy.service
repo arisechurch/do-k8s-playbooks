@@ -10,7 +10,7 @@ TimeoutStartSec=0
 RestartSec=5
 ExecStartPre=-/usr/bin/docker kill kubernetes-reverseproxy
 ExecStartPre=-/usr/bin/docker rm kubernetes-reverseproxy
-ExecStartPre=/usr/bin/docker pull darkgaro/kubernetes-reverseproxy:latest
+ExecStartPre=/usr/bin/docker pull arisechurch/kubernetes-reverseproxy:latest
 ExecStart=/usr/bin/docker run --rm --net host --name kubernetes-reverseproxy \
   -e CONFD_ETCD_NODE=127.0.0.1:4001 \
   arisechurch/kubernetes-reverseproxy:latest
