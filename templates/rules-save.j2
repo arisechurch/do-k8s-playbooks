@@ -4,7 +4,9 @@
 :OUTPUT ACCEPT [0:0]
 -A INPUT -i lo -j ACCEPT
 -A INPUT -s 10.100.0.0/16 -j ACCEPT
+-A FORWARD -s 10.100.0.0/16 -j ACCEPT
 -A INPUT -s 10.244.0.0/16 -j ACCEPT
+-A FORWARD -s 10.244.0.0/16 -j ACCEPT
 {% for host in groups.all %}
 -A INPUT -s {{hostvars[host].ansible_ssh_host}} -j ACCEPT
 -A INPUT -s {{hostvars[host].private_ip_address}} -j ACCEPT
