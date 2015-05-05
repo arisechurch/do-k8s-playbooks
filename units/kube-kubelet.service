@@ -1,0 +1,29 @@
+[Unit]
+Description=Kubernetes Kubelet
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+Requires=setup-network-environment.service
+After=setup-network-environment.service
+
+[Service]
+EnvironmentFile=/etc/environment
+EnvironmentFile=/etc/master-environment
+EnvironmentFile=/etc/network-environment
+ExecStartPre=/usr/bin/wget -N -P /opt/bin https://storage.googleapis.com/kubernetes-release/release/v0.16.2/bin/linux/amd64/kubelet
+ExecStartPre=/usr/bin/chmod +x /opt/bin/kubelet
+# wait for kubernetes master to be up and ready
+ExecStartPre=/opt/bin/wupiao ${K8S_MASTER_IPV4} 8080
+ExecStart=/opt/bin/kubelet \
+--address=0.0.0.0 \
+--port=10250 \
+--hostname_override=${COREOS_PRIVATE_IPV4} \
+--api_servers=${K8S_MASTER_IPV4}:8080 \
+--allow_privileged=true \
+--logtostderr=true \
+--healthz_bind_address=0.0.0.0 \
+--healthz_port=10248
+Restart=always
+RestartSec=10
+
+[X-Fleet]
+Global=true
+MachineMetadata=role=node

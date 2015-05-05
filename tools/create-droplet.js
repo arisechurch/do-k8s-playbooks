@@ -43,8 +43,8 @@ if (argv.master) {
 }
 var hostname = provhost.stringify(provhostOpts);
 
-if (argv.k && !Array.isArray(argv.k)) {
-  argv.k = [argv.k];
+if (argv.k) {
+  argv.k = argv.k.split(',').map(function(keyId) { return keyId.trim(); });
 }
 
 var userdata = null;

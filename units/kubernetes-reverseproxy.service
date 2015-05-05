@@ -1,0 +1,21 @@
+[Unit]
+Description=Kubernetes Reverse Proxy
+Documentation=https://github.com/darkgaro/kubernetes-reverseproxy
+Requires=etcd2.service
+After=etcd2.service
+
+[Service]
+Restart=always
+TimeoutStartSec=0
+RestartSec=5
+ExecStartPre=-/usr/bin/docker kill kubernetes-reverseproxy
+ExecStartPre=-/usr/bin/docker rm kubernetes-reverseproxy
+ExecStartPre=/usr/bin/docker pull darkgaro/kubernetes-reverseproxy:latest
+ExecStart=/usr/bin/docker run --rm --net host --name kubernetes-reverseproxy \
+  -e CONFD_ETCD_NODE=127.0.0.1:4001 \
+  arisechurch/kubernetes-reverseproxy:latest
+ExecStop=/usr/bin/docker stop kubernetes-reverseproxy
+
+[X-Fleet]
+Global=true
+MachineMetadata=role=node

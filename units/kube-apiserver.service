@@ -1,0 +1,27 @@
+[Unit]
+Description=Kubernetes API Server
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+Requires=etcd2.service
+After=etcd2.service
+
+[Service]
+EnvironmentFile=/etc/environment
+ExecStartPre=-/usr/bin/mkdir -p /opt/bin
+ExecStartPre=/usr/bin/wget -N -P /opt/bin https://storage.googleapis.com/kubernetes-release/release/v0.16.2/bin/linux/amd64/kube-apiserver
+ExecStartPre=/usr/bin/chmod +x /opt/bin/kube-apiserver
+ExecStart=/opt/bin/kube-apiserver \
+--allow_privileged=true \
+--insecure_bind_address=0.0.0.0 \
+--insecure_port=8080 \
+--kubelet_https=true \
+--secure_port=6443 \
+--portal_net=10.100.0.0/16 \
+--etcd_servers=http://127.0.0.1:4001 \
+--public_address_override=${COREOS_PRIVATE_IPV4} \
+--logtostderr=true
+Restart=always
+RestartSec=10
+
+[X-Fleet]
+Global=true
+MachineMetadata=role=master

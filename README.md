@@ -13,12 +13,13 @@ nodes!
 2. `export DO_API_TOKEN=xxx`
 3. `ansible-galaxy install defunctzombie.coreos-bootstrap`
 
+## Configuration
+
+Copy `group_vars/all.sample` to `group_vars/all` and edit.
+
 ## Create a 3 node cluster
 
 ```sh
 ansible-playbook -i inventories/digitalocean.sh create-master.yaml; ./add-node.sh; ./add-node.sh
+fleetctl --tunnel <master-ip> start units/*.service
 ```
-
-## Configuration
-
-Copy `group_vars/all.sample` to `group_vars/all` and edit.

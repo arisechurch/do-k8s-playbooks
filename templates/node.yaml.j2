@@ -9,6 +9,10 @@ write-files:
         --silent --head --fail \
         http://${1}:${2}; do sleep 1 && echo -n .; done;
       exit $?
+  - path: /etc/master-environment
+    permissions: '0644'
+    content: |
+      K8S_MASTER_IPV4={{master_host['private_ip_address']}}
 coreos:
   etcd2:
     listen-client-urls: http://0.0.0.0:2379,http://0.0.0.0:4001
@@ -55,70 +59,6 @@ coreos:
         ExecStart=/opt/bin/setup-network-environment
         RemainAfterExit=yes
         Type=oneshot
-    - name: kube-proxy.service
-      command: start
-      content: |
-        [Unit]
-        Description=Kubernetes Proxy
-        Documentation=https://github.com/GoogleCloudPlatform/kubernetes
-        Requires=setup-network-environment.service
-        After=setup-network-environment.service
-
-        [Service]
-        ExecStartPre=/usr/bin/wget -N -P /opt/bin https://storage.googleapis.com/kubernetes-release/release/v0.16.2/bin/linux/amd64/kube-proxy
-        ExecStartPre=/usr/bin/chmod +x /opt/bin/kube-proxy
-        # wait for kubernetes master to be up and ready
-        ExecStartPre=/opt/bin/wupiao {{master_host['private_ip_address']}} 8080
-        ExecStart=/opt/bin/kube-proxy \
-        --master={{master_host['private_ip_address']}}:8080 \
-        --logtostderr=true
-        Restart=always
-        RestartSec=10
-    - name: kube-kubelet.service
-      command: start
-      content: |
-        [Unit]
-        Description=Kubernetes Kubelet
-        Documentation=https://github.com/GoogleCloudPlatform/kubernetes
-        Requires=setup-network-environment.service
-        After=setup-network-environment.service
-
-        [Service]
-        EnvironmentFile=/etc/network-environment
-        ExecStartPre=/usr/bin/wget -N -P /opt/bin https://storage.googleapis.com/kubernetes-release/release/v0.16.2/bin/linux/amd64/kubelet
-        ExecStartPre=/usr/bin/chmod +x /opt/bin/kubelet
-        # wait for kubernetes master to be up and ready
-        ExecStartPre=/opt/bin/wupiao {{master_host['private_ip_address']}} 8080
-        ExecStart=/opt/bin/kubelet \
-        --address=0.0.0.0 \
-        --port=10250 \
-        --hostname_override=$private_ipv4 \
-        --api_servers={{master_host['private_ip_address']}}:8080 \
-        --allow_privileged=true \
-        --logtostderr=true \
-        --healthz_bind_address=0.0.0.0 \
-        --healthz_port=10248
-        Restart=always
-        RestartSec=10
-    - name: kubernetes-reverseproxy.service
-      command: start
-      content: |
-        [Unit]
-        Description=Kubernetes Reverse Proxy
-        Documentation=https://github.com/darkgaro/kubernetes-reverseproxy
-        Requires=etcd2.service
-        After=etcd2.service
-
-        [Service]
-        Restart=always
-        TimeoutStartSec=0
-        RestartSec=5
-        ExecStartPre=-/usr/bin/docker kill kubernetes-reverseproxy
-        ExecStartPre=-/usr/bin/docker rm kubernetes-reverseproxy
-        ExecStartPre=/usr/bin/docker pull darkgaro/kubernetes-reverseproxy:latest
-        ExecStart=/usr/bin/docker run --rm --net host --name kubernetes-reverseproxy \
-          -e CONFD_ETCD_NODE=127.0.0.1:4001 \
-          arisechurch/kubernetes-reverseproxy:latest
   update:
     group: alpha
     reboot-strategy: best-effort
