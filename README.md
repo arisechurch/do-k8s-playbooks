@@ -21,6 +21,22 @@ Copy `group_vars/all.sample` to `group_vars/all` and edit.
 
 ```sh
 ansible-playbook -i inventories/digitalocean.sh create-master.yaml; ./add-node.sh; ./add-node.sh
-fleetctl --tunnel <master-ip> start services/master/*.service
-fleetctl --tunnel <master-ip> start services/node/*.service
+export FLEETCTL_TUNNEL=<master-ip>
+fleetctl start services/master/*.service
+fleetctl start services/node/*.service
+```
+
+## Other tips
+
+### Forward the master api port
+
+```sh
+ssh -nNTL 8080:127.0.0.1:8080 core@<master-ip>
+```
+
+### Start a MySQL percona galera cluster
+
+```sh
+kubectl create -f services/percona-galera/percona-galera-svc.yaml
+./services/percona-galera/percona-galera-rc-up.sh
 ```
