@@ -41,9 +41,16 @@ spec:
             - "-c"
             - >-
               HOST=$(hostname -i)
-              CLUSTER=galera
-              PUBLISH=3306
               /app/bin/boot
+          env:
+            - name: "CLUSTER"
+              value: "galera"
+            - name: "PUBLISH"
+              value: "3306"
+            - name: "CLUSTER"
+              value: "galera"
+            - name: "MYSQL_PASS"
+              value: "{{password}}"
           ports:
             - containerPort: 3306
               protocol: "TCP"
