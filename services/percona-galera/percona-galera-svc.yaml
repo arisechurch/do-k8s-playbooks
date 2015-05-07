@@ -1,0 +1,12 @@
+kind: "Service"
+apiVersion: "v1beta3"
+metadata:
+  name: "percona-galera"
+  labels:
+    name: "percona-galera"
+spec:
+  ports:
+    - port: 3306
+      protocol: "TCP"
+  selector:
+    name: "percona-galera"

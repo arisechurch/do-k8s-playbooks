@@ -21,5 +21,6 @@ Copy `group_vars/all.sample` to `group_vars/all` and edit.
 
 ```sh
 ansible-playbook -i inventories/digitalocean.sh create-master.yaml; ./add-node.sh; ./add-node.sh
-fleetctl --tunnel <master-ip> start units/*.service
+fleetctl --tunnel <master-ip> start services/master/*.service
+fleetctl --tunnel <master-ip> start services/node/*.service
 ```
