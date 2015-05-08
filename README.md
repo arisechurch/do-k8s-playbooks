@@ -40,3 +40,15 @@ ssh -nNTL 8080:127.0.0.1:8080 core@<master-ip>
 kubectl create -f services/percona-galera/percona-galera-svc.yaml
 ./services/percona-galera/percona-galera-rc-up.sh
 ```
+
+### SSL keys and certs
+
+```sh
+mkdir ssl-certs
+cp /tmp/my-cert.crt ssl-certs/
+cp /tmp/my-key.key ssl-certs/
+ansible-playbooks -i inventories/digitalocean prepare-cluster.yaml
+```
+
+You can then update your `kubernetes-reverseproxy` annotation with your ssl
+keys.

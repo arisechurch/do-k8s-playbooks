@@ -20,3 +20,8 @@
 
     - command: "docker login -e '{{item.email}}' -u '{{item.username}}' -p '{{item.password}}' '{{item.host}}'"
       with_items: "{{docker_repos}}"
+
+    - synchronize:
+        src: "ssl-certs"
+        dest: "/home/core/ssl-certs"
+        delete: true

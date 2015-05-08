@@ -13,6 +13,7 @@ ExecStartPre=-/usr/bin/docker rm kubernetes-reverseproxy
 ExecStartPre=/usr/bin/docker pull arisechurch/kubernetes-reverseproxy:latest
 ExecStart=/usr/bin/docker run --rm --net host --name kubernetes-reverseproxy \
   -e CONFD_ETCD_NODE=127.0.0.1:4001 \
+  -v /home/core/ssl-certs:/etc/nginx/ssl |
   arisechurch/kubernetes-reverseproxy:latest
 ExecStop=/usr/bin/docker stop kubernetes-reverseproxy
 
