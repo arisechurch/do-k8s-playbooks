@@ -17,3 +17,6 @@
         state: "restarted"
         enabled: true
       sudo: true
+
+    - command: "docker login -e '{{item.email}}' -u '{{item.username}}' -p '{{item.password}}' '{{item.host}}'"
+      with_items: "{{docker_repos}}"
