@@ -4,14 +4,17 @@ metadata:
   name: "percona-galera"
   labels:
     name: "percona-galera"
+    env: "{{env}}"
 spec:
   replicas: 3
   selector:
     name: "percona-galera"
+    env: "{{env}}"
   template:
     metadata:
       labels:
         name: "percona-galera"
+        env: "{{env}}"
     spec:
       containers:
         - name: "etcd"
@@ -34,6 +37,9 @@ spec:
               protocol: "TCP"
             - containerPort: 7001
               protocol: "TCP"
+          volumeMounts:
+            - name: "mysql-data"
+              mountPath: "/var/lib/mysql"
         - name: "percona-galera"
           image: "paulczar/percona-galera"
           command:
@@ -60,3 +66,7 @@ spec:
               protocol: "TCP"
             - containerPort: 4568
               protocol: "TCP"
+      volumes:
+        - name: "mysql-data"
+          emptyDir:
+            medium: ""

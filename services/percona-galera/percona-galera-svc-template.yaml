@@ -1,12 +1,14 @@
 kind: "Service"
 apiVersion: "v1beta3"
 metadata:
-  name: "percona-galera"
+  name: "percona-galera-{{env}}"
   labels:
     name: "percona-galera"
+    env: "{{env}}"
 spec:
   ports:
     - port: 3306
       protocol: "TCP"
   selector:
     name: "percona-galera"
+    env: "{{env}}"
