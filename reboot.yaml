@@ -1,0 +1,11 @@
+---
+
+- hosts: "k8s"
+  gather_facts: false
+  roles:
+    - "defunctzombie.coreos-bootstrap"
+
+  tasks:
+
+    - command: "reboot"
+      sudo: true
