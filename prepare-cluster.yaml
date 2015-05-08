@@ -20,6 +20,11 @@
 
     - command: "docker login -e '{{item.email}}' -u '{{item.username}}' -p '{{item.password}}' '{{item.host}}'"
       with_items: "{{docker_repos}}"
+    - file:
+        src: "/home/core/.dockercfg"
+        dest: "/.dockercfg"
+        state: "link"
+      sudo: true
 
     - synchronize:
         src: "ssl-certs/"
