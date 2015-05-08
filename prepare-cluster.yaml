@@ -22,6 +22,6 @@
       with_items: "{{docker_repos}}"
 
     - synchronize:
-        src: "ssl-certs"
+        src: "ssl-certs/"
         dest: "/home/core/ssl-certs"
         delete: true
