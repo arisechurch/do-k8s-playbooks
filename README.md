@@ -1,6 +1,6 @@
 # do-k8s-playbooks
 
-Manage a k8s cluster on Digitalocean using Ansible.
+Manage a Kubernetes cluster on Digitalocean using Ansible.
 
 Comes with https://github.com/ARISEChurch/kubernetes-reverseproxy running on all
 nodes to load balance your services with `nginx`. Read the README.md for usage
