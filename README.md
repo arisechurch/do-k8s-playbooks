@@ -34,13 +34,6 @@ fleetctl start services/node/*.service
 ssh -nNTL 8080:127.0.0.1:8080 core@<master-ip>
 ```
 
-### Start a MySQL percona galera cluster
-
-```sh
-kubectl create -f services/percona-galera/percona-galera-svc.yaml
-./services/percona-galera/percona-galera-rc-up.sh
-```
-
 ### SSL keys and certs
 
 ```sh
