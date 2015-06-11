@@ -1,13 +1,13 @@
 [Unit]
 Description=Kubernetes API Server
 Documentation=https://github.com/GoogleCloudPlatform/kubernetes
-Requires=etcd2.service
-After=etcd2.service
+Requires=etcd2.service setup-network-environment.service
+After=etcd2.service setup-network-environment.service
 
 [Service]
 EnvironmentFile=/etc/environment
 ExecStartPre=-/usr/bin/mkdir -p /opt/bin
-ExecStartPre=/usr/bin/wget -N -P /opt/bin https://storage.googleapis.com/kubernetes-release/release/v0.17.0/bin/linux/amd64/kube-apiserver
+ExecStartPre=/usr/bin/curl -L -o /opt/bin/kube-apiserver -z /opt/bin/kube-apiserver https://storage.googleapis.com/kubernetes-release/release/v0.18.1/bin/linux/amd64/kube-apiserver
 ExecStartPre=/usr/bin/chmod +x /opt/bin/kube-apiserver
 ExecStart=/opt/bin/kube-apiserver \
 --allow_privileged=true \
@@ -15,7 +15,7 @@ ExecStart=/opt/bin/kube-apiserver \
 --insecure_port=8080 \
 --kubelet_https=true \
 --secure_port=6443 \
---portal_net=10.100.0.0/16 \
+--service-cluster-ip-range=10.100.0.0/16 \
 --etcd_servers=http://127.0.0.1:4001 \
 --public_address_override=${COREOS_PRIVATE_IPV4} \
 --logtostderr=true

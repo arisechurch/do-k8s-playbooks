@@ -6,7 +6,7 @@ After=setup-network-environment.service
 
 [Service]
 EnvironmentFile=/etc/master-environment
-ExecStartPre=/usr/bin/wget -N -P /opt/bin https://storage.googleapis.com/kubernetes-release/release/v0.17.0/bin/linux/amd64/kube-proxy
+ExecStartPre=/usr/bin/curl -L -o /opt/bin/kube-proxy -z /opt/bin/kube-proxy https://storage.googleapis.com/kubernetes-release/release/v0.18.1/bin/linux/amd64/kube-proxy
 ExecStartPre=/usr/bin/chmod +x /opt/bin/kube-proxy
 # wait for kubernetes master to be up and ready
 ExecStartPre=/opt/bin/wupiao ${K8S_MASTER_IPV4} 8080

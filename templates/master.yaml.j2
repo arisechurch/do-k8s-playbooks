@@ -28,7 +28,7 @@ coreos:
 
         [Service]
         ExecStartPre=-/usr/bin/mkdir -p /opt/bin
-        ExecStartPre=/usr/bin/wget -N -P /opt/bin https://storage.googleapis.com/k8s/setup-network-environment 
+        ExecStartPre=/usr/bin/curl -L -o /opt/bin/setup-network-environment -z /opt/bin/setup-network-environment https://github.com/kelseyhightower/setup-network-environment/releases/download/v1.0.0/setup-network-environment
         ExecStartPre=/usr/bin/chmod +x /opt/bin/setup-network-environment
         ExecStart=/opt/bin/setup-network-environment
         RemainAfterExit=yes
@@ -72,6 +72,24 @@ coreos:
             -e MIRROR_TAGS_CACHE_TTL=1800 \
             quay.io/devops/docker-registry:latest
     - name: docker.service
+      content: |
+        [Unit]
+        Description=Docker Application Container Engine
+        Documentation=http://docs.docker.com
+        After=docker.socket early-docker.target network.target
+        Requires=docker.socket early-docker.target
+
+        [Service]
+        Environment=TMPDIR=/var/tmp
+        EnvironmentFile=-/run/flannel_docker_opts.env
+        EnvironmentFile=/etc/network-environment
+        MountFlags=slave
+        LimitNOFILE=1048576
+        LimitNPROC=1048576
+        ExecStart=/usr/lib/coreos/dockerd --daemon --host=fd:// --registry-mirror=http://${DEFAULT_IPV4}:5000 $DOCKER_OPT_BIP $DOCKER_OPT_MTU $DOCKER_OPT_IPMASQ
+
+        [Install]
+        WantedBy=multi-user.target
       drop-ins:
         - name: 51-docker-mirror.conf
           content: |
@@ -80,8 +98,6 @@ coreos:
             # startup, otherwise containers won't land in flannel's network...
             Requires=docker-cache.service flanneld.service
             After=docker-cache.service flanneld.service
-            [Service]
-            Environment=DOCKER_OPTS='--registry-mirror=http://$private_ipv4:5000'
   update:
     group: alpha
     reboot-strategy: best-effort
