@@ -22,8 +22,8 @@
       with_items: "{{docker_repos}}"
 
     - file:
-        src: "/home/core/.dockercfg"
-        dest: "/root/.dockercfg"
+        src: "/home/core/.docker"
+        dest: "/root/.docker"
         state: "link"
       sudo: true
 

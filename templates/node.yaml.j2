@@ -14,6 +14,17 @@ write-files:
     content: |
       K8S_MASTER_IPV4={{master_host['private_ip_address']}}
 coreos:
+  etcd2:
+    listen-client-urls: http://0.0.0.0:2379,http://0.0.0.0:4001
+    advertise-client-urls: http://0.0.0.0:2379,http://0.0.0.0:4001
+    initial-cluster: master=http://{{master_host['private_ip_address']}}:2380
+    proxy: on
+  fleet:
+    public-ip: $private_ipv4
+    metadata: "role=node"
+  flannel:
+    interface: $private_ipv4
+  units:
     - name: fleet.service
       command: start
     - name: flanneld.service
@@ -35,6 +46,7 @@ coreos:
         Documentation=https://github.com/kelseyhightower/setup-network-environment
         Requires=network-online.target
         After=network-online.target
+
         [Service]
         ExecStartPre=-/usr/bin/mkdir -p /opt/bin
         ExecStartPre=/usr/bin/curl -L -o /opt/bin/setup-network-environment -z /opt/bin/setup-network-environment https://github.com/kelseyhightower/setup-network-environment/releases/download/v1.0.0/setup-network-environment
