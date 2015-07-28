@@ -29,6 +29,7 @@ coreos:
     initial-cluster: master=http://$private_ipv4:2380
     initial-cluster-state: new
   fleet:
+    public-ip: $private_ipv4
     metadata: "role=master"
   flannel:
     interface: $private_ipv4
