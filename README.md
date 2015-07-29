@@ -34,6 +34,14 @@ fleetctl start services/node/*.service
 ssh -nNTL 8080:127.0.0.1:8080 core@<master-ip>
 ```
 
+### Setup cluster DNS
+
+First forward the master api port as above.
+
+```sh
+./setup-dns.sh
+```
+
 ### SSL keys and certs
 
 ```sh
