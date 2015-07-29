@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+'use strict';
 
 var provhost = require('provhost');
 var nautical = require('nautical');
@@ -7,7 +8,7 @@ var argv = require('optimist')
   .alias('u', 'user-data')
 
   .alias('t', 'token')
-  .default('token', process.env['DO_API_TOKEN'])
+  .default('token', process.env.DO_API_TOKEN)
 
   .alias('m', 'master')
   .default('master', false)
@@ -24,7 +25,7 @@ var argv = require('optimist')
   .default('size', '512mb')
 
   .alias('n', 'namespace')
-  .default('namespace', process.env['DO_NAMESPACE'] || 'coreos')
+  .default('namespace', process.env.DO_NAMESPACE || 'coreos')
 
   .argv;
 
@@ -44,7 +45,9 @@ if (argv.master) {
 var hostname = provhost.stringify(provhostOpts);
 
 if (argv.k) {
-  argv.k = argv.k.split(',').map(function(keyId) { return keyId.trim(); });
+  argv.k = argv.k.split(',').map(function(keyId) {
+    return keyId.trim();
+  });
 }
 
 var userdata = null;
@@ -57,9 +60,9 @@ api.droplets.create({
   region: argv.region,
   size: argv.size,
   image: argv.image,
-  private_networking: true,
-  ssh_keys: argv.k,
-  user_data: userdata
+  'private_networking': true,
+  'ssh_keys': argv.k,
+  'user_data': userdata
 }, function(error, res) {
   if (error) {
     throw error;
@@ -85,10 +88,10 @@ function waitUntilStarted(id) {
 
     var droplet = res.body.droplet;
 
-    if ('active' === droplet.status) {
+    if (droplet.status === 'active') {
       var networks = {};
       droplet.networks.v4.forEach(function(network) {
-	networks[network.type] = network;
+        networks[network.type] = network;
       });
       return process.stdout.write(JSON.stringify(networks, null, 2));
     }

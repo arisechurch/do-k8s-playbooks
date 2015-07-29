@@ -1,0 +1,17 @@
+{
+  "libs": [
+    "browser",
+    "ecma5",
+    "ecma6",
+    "jquery"
+  ],
+  "loadEagerly": [
+    "tools/**/*.js"
+  ],
+  "plugins": {
+    "complete_strings": {},
+    "doc_comment": {
+     "fullDocs": true
+    }
+  }
+}
