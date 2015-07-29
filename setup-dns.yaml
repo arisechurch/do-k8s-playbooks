@@ -13,8 +13,6 @@
         src: "templates/dns-controller.yaml.j2"
         dest: "/tmp/dns-controller.yaml"
 
-    - command: >
-      kubelet create -f /tmp/dns-controller.yaml
+    - command: "kubectl create -f /tmp/dns-controller.yaml"
 
-    - command: >
-      kubelet create -f templates/dns-service.yaml
+    - command: "kubectl create -f templates/dns-service.yaml"
