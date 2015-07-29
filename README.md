@@ -20,7 +20,7 @@ Copy `group_vars/all.sample` to `group_vars/all` and edit.
 ## Create a 3 node cluster
 
 ```sh
-ansible-playbook -i inventories/digitalocean.sh create-master.yaml; ./add-node.sh; ./add-node.sh
+ansible-playbook -i inventories/digitalocean.sh create-master.yaml; ./add-node.sh; ./add-node.sh; ./add-node.sh
 export FLEETCTL_TUNNEL=<master-ip>
 fleetctl start services/master/*.service
 fleetctl start services/node/*.service
