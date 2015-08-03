@@ -8,7 +8,7 @@ After=setup-network-environment.service
 EnvironmentFile=/etc/environment
 EnvironmentFile=/etc/network-environment
 EnvironmentFile=/etc/master-environment
-ExecStartPre=/usr/bin/curl -L -o /opt/bin/kubelet -z /opt/bin/kubelet https://storage.googleapis.com/kubernetes-release/release/v1.0.1/bin/linux/amd64/kubelet
+ExecStartPre=/usr/bin/curl -L -o /opt/bin/kubelet -z /opt/bin/kubelet https://storage.googleapis.com/kubernetes-release/release/v1.0.2/bin/linux/amd64/kubelet
 ExecStartPre=/usr/bin/chmod +x /opt/bin/kubelet
 # wait for kubernetes master to be up and ready
 ExecStartPre=/opt/bin/wupiao ${K8S_MASTER_IPV4} 8080
