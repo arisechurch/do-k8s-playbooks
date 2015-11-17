@@ -5,12 +5,15 @@ Requires=kube-apiserver.service
 After=kube-apiserver.service
 
 [Service]
-ExecStartPre=/usr/bin/curl -L -o /opt/bin/kube-controller-manager -z /opt/bin/kube-controller-manager https://storage.googleapis.com/kubernetes-release/release/v1.0.3/bin/linux/amd64/kube-controller-manager
+ExecStartPre=/usr/bin/curl -L \
+	-o /opt/bin/kube-controller-manager \
+	-z /opt/bin/kube-controller-manager \
+	https://storage.googleapis.com/kubernetes-release/release/v1.1.1/bin/linux/amd64/kube-controller-manager
 ExecStartPre=/usr/bin/chmod +x /opt/bin/kube-controller-manager
 ExecStart=/opt/bin/kube-controller-manager \
---service_account_private_key_file=/opt/bin/kube-serviceaccount.key \
---master=127.0.0.1:8080 \
---logtostderr=true
+	--service-account-private-key-file=/opt/bin/kube-serviceaccount.key \
+	--master=127.0.0.1:8080 \
+	--logtostderr=true
 Restart=always
 RestartSec=10
 
