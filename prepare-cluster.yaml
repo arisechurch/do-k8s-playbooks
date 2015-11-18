@@ -7,16 +7,10 @@
 
   tasks:
 
-    # - template:
-    #     src: "templates/rules-save.j2"
-    #     dest: "/var/lib/iptables/rules-save"
-    #   sudo: true
-
-    # - service:
-    #     name: "iptables-restore"
-    #     state: "restarted"
-    #     enabled: true
-    #   sudo: true
+    - template:
+        src: "templates/rules-save.j2"
+        dest: "/var/lib/iptables/rules-save"
+      sudo: true
 
     - command: "docker login -e '{{item.email}}' -u '{{item.username}}' -p '{{item.password}}' '{{item.host}}'"
       with_items: "{{docker_repos}}"

@@ -24,6 +24,7 @@ ansible-playbook -i inventories/digitalocean.sh create-master.yaml; ./add-node.s
 export FLEETCTL_TUNNEL=<master-ip>
 fleetctl start services/master/*.service
 fleetctl start services/node/*.service
+ansible-playbook -i inventories/digitalocean.sh reboot.yaml
 ```
 
 ## Other tips
