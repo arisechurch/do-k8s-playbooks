@@ -45,7 +45,7 @@ if (argv.master) {
 var hostname = provhost.stringify(provhostOpts);
 
 if (argv.k) {
-  argv.k = argv.k.split(',').map(function(keyId) {
+  argv.k = ('' + argv.k).split(',').map(function(keyId) {
     return keyId.trim();
   });
 }

@@ -50,7 +50,10 @@ First create a 3 node cluster
 
 ```sh
 ansible-playbook -i inventories/digitalocean.sh bootstrap-ceph.yaml
-fleetctl start services/ceph/*
+fleetctl start services/ceph/ceph-mon.service
+# Create 3 OSD's using ceph/base image on one of the nodes
+fleetctl start services/ceph/ceph-osd.service
+fleetctl start services/ceph/ceph-mds.service
 ```
 
 ### SSL keys and certs

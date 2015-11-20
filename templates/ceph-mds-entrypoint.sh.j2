@@ -14,9 +14,9 @@
 : ${CEPHFS_CREATE:=0}
 : ${CEPHFS_NAME:=cephfs}
 : ${CEPHFS_DATA_POOL:=${CEPHFS_NAME}_data}
-: ${CEPHFS_DATA_POOL_PG:={{(100 * groups.node|length) // 3}}}
+: ${CEPHFS_DATA_POOL_PG:=128}
 : ${CEPHFS_METADATA_POOL:=${CEPHFS_NAME}_metadata}
-: ${CEPHFS_METADATA_POOL_PG:={{(100 * groups.node|length) // 3}}}
+: ${CEPHFS_METADATA_POOL_PG:=128}
 
 if [ ! -n "$MDS_NAME" ]; then
    echo "ERROR- MDS_NAME must be defined as the name of the metadata server"
