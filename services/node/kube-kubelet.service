@@ -25,8 +25,7 @@ ExecStart=/opt/bin/kubelet \
 	--logtostderr=true \
 	--cadvisor-port=4194 \
 	--healthz-bind-address=0.0.0.0 \
-	--healthz-port=10248 \
-	--v=4
+	--healthz-port=10248
 Restart=always
 RestartSec=10
 
