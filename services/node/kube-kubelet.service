@@ -7,6 +7,7 @@ After=setup-network-environment.service
 [Service]
 EnvironmentFile=/etc/environment
 EnvironmentFile=/etc/master-environment
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/bin
 ExecStartPre=/usr/bin/curl -L \
 	-o /opt/bin/kubelet \
 	-z /opt/bin/kubelet \
@@ -24,7 +25,8 @@ ExecStart=/opt/bin/kubelet \
 	--logtostderr=true \
 	--cadvisor-port=4194 \
 	--healthz-bind-address=0.0.0.0 \
-	--healthz-port=10248
+	--healthz-port=10248 \
+	--v=4
 Restart=always
 RestartSec=10
 

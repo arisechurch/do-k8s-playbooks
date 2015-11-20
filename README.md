@@ -41,6 +41,16 @@ First forward the master api port as above.
 
 ```sh
 ./setup-dns.sh
+ansible-playbook -i inventories/digitalocean.sh reboot.yaml
+```
+
+### Setup ceph cluster
+
+First create a 3 node cluster
+
+```sh
+ansible-playbook -i inventories/digitalocean.sh bootstrap-ceph.yaml
+fleetctl start services/ceph/*
 ```
 
 ### SSL keys and certs

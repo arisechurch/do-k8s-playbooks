@@ -1,0 +1,29 @@
+[Unit]
+Description=Ceph OSD
+After=docker.service ceph-mon.service
+
+[Service]
+EnvironmentFile=-/etc/environment
+Environment=HOSTNAME=%H
+ExecStartPre=/bin/mkdir -p /etc/ceph /var/lib/ceph/osd/journal
+ExecStartPre=-/usr/bin/docker kill %p
+ExecStartPre=-/usr/bin/docker rm %p
+ExecStartPre=/usr/bin/docker pull ceph/osd
+ExecStart=/usr/bin/docker run --rm --name %p --net=host --privileged \
+  -e JOURNAL_DIR=/var/lib/ceph/osd/journal \
+  -e HOSTNAME=${HOSTNAME} \
+  -v /etc/ceph:/etc/ceph \
+  -v /dev:/dev \
+  -v /var/lib/ceph/osd:/var/lib/ceph/osd \
+  -v /var/log/ceph:/var/log/ceph \
+  ceph/osd
+ExecStopPost=-/usr/bin/docker stop %p
+ExecStopPost=-/usr/bin/docker rm %p
+Restart=always
+RestartSec=10s
+TimeoutStartSec=120
+TimeoutStopSec=15
+
+[X-Fleet]
+Global=true
+MachineMetadata=role=node

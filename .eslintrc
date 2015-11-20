@@ -14,10 +14,10 @@ rules:
   no-undefined: 2
   no-use-before-define: [2, "nofunc"]
   radix: 2
-  space-after-function-name: [2, "never"]
+  space-before-function-paren: [2, "never"]
   space-after-keywords: [2, "always"]
   space-before-blocks: 2
-  spaced-line-comment: 2
+  spaced-comment: 2
   strict: [2, "global"]
   wrap-iife: 2
 

@@ -1,0 +1,17 @@
+[global]
+fsid = {{ceph_fsid}}
+mon initial members = {% for host in groups.node %}{{hostvars[host].inventory_hostname}}{% if not loop.last %}, {% endif %}{% endfor %}
+
+mon host = {% for host in groups.node %}{{hostvars[host].private_ip_address}}{% if not loop.last %}, {% endif %}{% endfor %}
+
+public network = {{ceph_public_network}}
+auth cluster required = cephx
+auth service required = cephx
+auth client required = cephx
+osd journal size = 1024
+filestore xattr use omap = true
+osd pool default size = 2
+osd pool default min size = 1
+osd pool default pg num = {{(100 * groups.node|length) // 3}}
+osd pool default pgp num = {{(100 * groups.node|length) // 3}}
+osd crush chooseleaf type = 1

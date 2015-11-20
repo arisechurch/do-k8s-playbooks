@@ -1,0 +1,30 @@
+[Unit]
+Description=Ceph Metadata Server
+After=docker.service ceph-mon.service
+
+[Service]
+TimeoutSec=0
+EnvironmentFile=-/etc/environment
+ExecStartPre=/bin/mkdir -p /etc/ceph /var/lib/ceph/mds
+ExecStartPre=-/usr/bin/docker kill %p
+ExecStartPre=-/usr/bin/docker rm %p
+ExecStartPre=/usr/bin/docker pull ceph/mds
+ExecStart=/usr/bin/docker run --rm --net=host --name %p \
+  -e CEPHFS_CREATE=1 \
+  -e CEPHFS_DATA_POOL_PG=100 \
+  -e CEPHFS_METADATA_POOL_PG=100 \
+  -e MDS_NAME=%H \
+  -v /etc/ceph:/etc/ceph \
+  -v /var/lib/ceph/mds:/var/lib/ceph/mds \
+  --entrypoint /etc/ceph/scripts/mds-entrypoint.sh \
+  ceph/mds
+ExecStopPost=-/usr/bin/docker stop %p
+ExecStopPost=-/usr/bin/docker rm %p
+Restart=always
+RestartSec=10s
+TimeoutStartSec=120
+TimeoutStopSec=15
+
+[X-Fleet]
+Global=true
+MachineMetadata=role=node

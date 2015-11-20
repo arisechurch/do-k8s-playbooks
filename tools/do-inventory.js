@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-"use strict";
+'use strict';
 
 var argv = require('optimist')
   .default('token', process.env['DO_API_TOKEN'])
@@ -17,7 +17,13 @@ api.droplets.list(function(error, res) {
     throw error;
   }
 
-  var droplets = res.body.droplets;
+  var droplets = res.body.droplets.sort(function(a, b) {
+    a = new Date(a.created_at);
+    b = new Date(b.created_at);
+
+    return a - b;
+  });
+
   var dropletHash = {
     _meta: {
       hostvars: {}

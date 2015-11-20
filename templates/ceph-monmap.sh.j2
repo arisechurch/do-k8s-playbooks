@@ -1,0 +1,5 @@
+rm -f /etc/ceph/monmap
+monmaptool /etc/ceph/monmap --create --fsid {{ceph_fsid}}
+{% for host in groups.node %}
+monmaptool /etc/ceph/monmap --add {{hostvars[host].inventory_hostname}} {{hostvars[host].private_ip_address}}
+{% endfor %}
