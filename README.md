@@ -54,6 +54,8 @@ fleetctl start services/ceph/ceph-mon.service
 # Create 3 OSD's using ceph/base image on one of the nodes
 fleetctl start services/ceph/ceph-osd.service
 fleetctl start services/ceph/ceph-mds.service
+# After setting up cephfs
+fleetctl start services/ceph/mnt-cephfs.mount
 ```
 
 ### SSL keys and certs

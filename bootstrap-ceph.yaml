@@ -66,6 +66,9 @@
 
     - command: "docker run --rm -v /etc/ceph:/etc/ceph --net=host ceph/base 'bash /etc/ceph/scripts/monmap.sh'"
 
+    - command: "docker run --rm -v /etc/ceph:/etc/ceph --net=host ceph/base ceph auth get-key client.admin"
+      register: "admin_key"
+
     - file:
         path: "/tmp/ceph"
         state: "directory"
@@ -85,3 +88,16 @@
         src: "/tmp/ceph/"
         dest: "/etc/ceph"
       sudo: true
+
+- hosts: "localhost"
+  vars:
+    ansible_connection: "local"
+    ansible_python_interpreter: "python"
+  tasks:
+
+    - set_fact:
+        admin_key: "{{hostvars[groups.node[0]].admin_key.stdout}}"
+
+    - template:
+        src: "templates/cephfs.mount.j2"
+        dest: "services/ceph/mnt-cephfs.mount"
