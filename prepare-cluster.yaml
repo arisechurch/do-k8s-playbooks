@@ -21,11 +21,6 @@
         state: "link"
       sudo: true
 
-    - synchronize:
-        src: "ssl-certs/"
-        dest: "/home/core/ssl-certs"
-        delete: true
-
 - hosts: "node"
   gather_facts: false
   tasks:
