@@ -5,12 +5,6 @@ do_region: "sfo1"
 do_master_size: "1gb"
 do_node_size: "1gb"
 
-docker_repos:
-  - host: "some.host:5000"
-    username: "me"
-    password: "secret"
-    email: "me@example.com"
-
 ceph_fsid: "<uuid>"
 ceph_public_network: "1.2.0.0/16"
 

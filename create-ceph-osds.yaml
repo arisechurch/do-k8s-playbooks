@@ -1,0 +1,19 @@
+---
+
+- hosts: "node"
+  gather_facts: true
+  tasks:
+
+  - shell: "if stat -t /var/lib/ceph/osd/ceph-* >/dev/null 2>&1; then echo yes; else echo no; fi"
+    register: "ceph_osd_check"
+
+  - command: "docker run --rm --net=host -v /etc/ceph:/etc/ceph ceph/base ceph osd create"
+    register: "ceph_osd_id"
+    when: "ceph_osd_check.stdout == 'no'"
+
+  - file:
+      path: "/var/lib/ceph/osd/ceph-{{ceph_osd_id.stdout}}"
+      state: "directory"
+      mode: "0755"
+    sudo: true
+    when: "ceph_osd_id.stdout is defined"
