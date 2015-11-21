@@ -13,7 +13,7 @@ Manage a Kubernetes cluster on Digitalocean using Ansible.
 
 Copy `group_vars/all.sample` to `group_vars/all` and edit.
 
-## Create a 3 node cluster
+## Create a simple 3 node cluster
 
 ```sh
 ansible-playbook -i inventories/digitalocean.sh create-master.yaml; ./add-node.sh; ./add-node.sh; ./add-node.sh
@@ -22,6 +22,27 @@ fleetctl start services/master/*.service
 fleetctl start services/node/*.service
 ansible-playbook -i inventories/digitalocean.sh reboot.yaml
 ```
+
+## Create a 3 node cluster with dns and ceph
+
+```sh
+ansible-playbook -i inventories/digitalocean.sh create-master.yaml; ./add-node.sh; ./add-node.sh; ./add-node.sh
+export FLEETCTL_TUNNEL=<master-ip>
+fleetctl start services/master/*.service
+./setup-dns.sh
+fleetctl start services/node/*.service
+ansible-playbook -i inventories/digitalocean.sh bootstrap-ceph.yaml
+fleetctl start services/ceph/ceph-mon.service
+# Create 3 OSD's using ceph/base image on one of the nodes
+# ssh core@<node ip> docker run --rm -v /etc/ceph:/etc/ceph --net=host ceph/base ceph osd create
+# ssh core@<node ip> docker run --rm -v /etc/ceph:/etc/ceph --net=host ceph/base ceph osd create
+# ssh core@<node ip> docker run --rm -v /etc/ceph:/etc/ceph --net=host ceph/base ceph osd create
+fleetctl start services/ceph/ceph-osd.service
+fleetctl start services/ceph/ceph-mds.service
+# Once mds has bootstraped cephfs
+fleetctl start services/ceph/mnt-cephfs.mount
+```
+
 
 ## Other tips
 
