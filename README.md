@@ -85,12 +85,5 @@ fleetctl start services/ceph/mnt-cephfs.mount
 
 ### SSL keys and certs
 
-```sh
-mkdir ssl-certs
-cp /tmp/my-cert.crt ssl-certs/
-cp /tmp/my-key.key ssl-certs/
-ansible-playbooks -i inventories/digitalocean prepare-cluster.yaml
-```
-
-You can then update your `kubernetes-reverseproxy` annotation with your ssl
-keys.
+HTTP proxy layer is handled by `vulcand`. You can view there documentation
+around SSL certs here: http://vulcand.io/proxy.html#managing-certificates
