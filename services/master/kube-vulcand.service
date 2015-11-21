@@ -1,16 +1,15 @@
 [Unit]
 Description=Vulcand kubernetes sync
-After=vulcand.service docker.service
+After=kube-apiserver.service
 
 [Service]
 EnvironmentFile=/etc/environment
 ExecStartPre=-/usr/bin/docker kill %p
 ExecStartPre=-/usr/bin/docker rm %p
-ExecStartPre=/usr/bin/docker pull timsmart/kube-vulcand
-ExecStart=/usr/bin/docker run --rm --name %p \
-	timsmart/kube-vulcand \
-	-pods "ws://${COREOS_PRIVATE_IPV4}:8080/api/v1/namespaces/default/pods?watch=true" \
-	-etcd "http://${COREOS_PRIVATE_IPV4}:2379"
+ExecStartPre=/usr/bin/docker pull quay.io/timeline_labs/romulusd
+ExecStart=/usr/bin/docker run --rm --net=host --name %p \
+	quay.io/timeline_labs/romulusd \
+	--svc-selector=type=external
 ExecStopPost=-/usr/bin/docker stop %p
 ExecStopPost=-/usr/bin/docker rm %p
 Restart=always
