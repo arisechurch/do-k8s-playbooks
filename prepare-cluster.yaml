@@ -12,6 +12,12 @@
       dest: "/var/lib/iptables/rules-save"
     sudo: true
 
+  - service:
+      name: "iptables-restore"
+      state: "restarted"
+      enabled: true
+    sudo: true
+
 - hosts: "node"
   gather_facts: false
   tasks:
