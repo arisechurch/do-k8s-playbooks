@@ -2,10 +2,6 @@
 
 Manage a Kubernetes cluster on Digitalocean using Ansible.
 
-Comes with https://github.com/ARISEChurch/kubernetes-reverseproxy running on all
-nodes to load balance your services with `nginx`. Read the README.md for usage
-detail. It works best with round-robin DNS pointing to all your Kubernetes
-nodes!
 
 ## Prepare
 
@@ -28,6 +24,14 @@ ansible-playbook -i inventories/digitalocean.sh reboot.yaml
 ```
 
 ## Other tips
+
+### Load balance http pods
+
+```sh
+ssh core@<master-ip>
+etcdctl set /vulcand/backends/default-<pod name>/backend '{"Type": "http"}'
+etcdctl set /vulcand/frontends/default-<pod name>/frontend '{"Type": "http", "BackendId": "default-<pod name>", "Route": "Host(`host.domain.com`)"}'
+```
 
 ### Forward the master api port
 

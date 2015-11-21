@@ -10,3 +10,8 @@ docker_repos:
     username: "me"
     password: "secret"
     email: "me@example.com"
+
+ceph_fsid: "<uuid>"
+ceph_public_network: "1.2.0.0/16"
+
+vulcand_secret: "xxx"

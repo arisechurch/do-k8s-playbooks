@@ -25,3 +25,14 @@
         src: "ssl-certs/"
         dest: "/home/core/ssl-certs"
         delete: true
+
+- hosts: "node"
+  gather_facts: false
+  tasks:
+
+  - lineinfile:
+      state: "present"
+      dest: "/etc/vulcand-env"
+      line: "VULCAND_SEAL_KEY={{vulcand_secret}}"
+      create: "yes"
+    sudo: true
