@@ -11,12 +11,20 @@
       src: "templates/rules-save.j2"
       dest: "/var/lib/iptables/rules-save"
     sudo: true
+    register: "iptables_rules"
 
   - service:
       name: "iptables-restore"
       state: "restarted"
       enabled: true
     sudo: true
+    when: "iptables_rules|changed"
+
+  - service:
+      name: "docker"
+      state: "restarted"
+    sudo: true
+    when: "iptables_rules|changed"
 
 - hosts: "node"
   gather_facts: false
