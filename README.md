@@ -38,10 +38,7 @@ fleetctl start services/node/*.service
 ansible-playbook -i inventories/digitalocean.sh bootstrap-ceph.yaml
 fleetctl start services/ceph/ceph-mon.service
 ansible-playbook -i inventories/digitalocean.sh create-ceph-osds.yaml
-fleetctl start services/ceph/ceph-osd.service
-fleetctl start services/ceph/ceph-mds.service
-# Once mds has bootstraped cephfs
-fleetctl start services/ceph/mnt-cephfs.mount
+fleetctl start services/ceph/*
 ```
 
 
@@ -90,11 +87,8 @@ First create a 3 node cluster
 ```sh
 ansible-playbook -i inventories/digitalocean.sh bootstrap-ceph.yaml
 fleetctl start services/ceph/ceph-mon.service
-# Create 3 OSD's using ceph/base image on one of the nodes
-fleetctl start services/ceph/ceph-osd.service
-fleetctl start services/ceph/ceph-mds.service
-# After setting up cephfs
-fleetctl start services/ceph/mnt-cephfs.mount
+ansible-playbook -i inventories/digitalocean.sh create-ceph-osds.yaml
+fleetctl start services/ceph/*
 ```
 
 

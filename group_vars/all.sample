@@ -6,6 +6,6 @@ do_master_size: "1gb"
 do_node_size: "1gb"
 
 ceph_fsid: "<uuid>"
-ceph_public_network: "1.2.0.0/16"
+ceph_public_network: "10.134.0.0/16"
 
 vulcand_secret: "xxx"

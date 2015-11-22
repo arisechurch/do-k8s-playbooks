@@ -1,0 +1,13 @@
+[Unit]
+Description=Ceph Filesystem mounter
+After=ceph-mds.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/bin/cephfs-mount
+ExecStop=/bin/umount /mnt/cephfs
+RemainAfterExit=yes
+
+[X-Fleet]
+Global=true
+MachineMetadata=role=node

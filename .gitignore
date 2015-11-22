@@ -2,4 +2,3 @@ node_modules/
 group_vars/all
 ssl-certs/*.key
 ssl-certs/*.crt
-services/ceph/mnt-cephfs.mount

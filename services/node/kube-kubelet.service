@@ -2,7 +2,7 @@
 Description=Kubernetes Kubelet
 Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 Requires=setup-network-environment.service
-After=setup-network-environment.service mnt-cephfs.mount
+After=setup-network-environment.service cephfs-mount.service
 
 [Service]
 EnvironmentFile=/etc/environment
