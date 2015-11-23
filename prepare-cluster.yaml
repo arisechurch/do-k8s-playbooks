@@ -25,6 +25,7 @@
       state: "restarted"
     sudo: true
     when: "iptables_rules|changed"
+    ignore_errors: true
 
 - hosts: "node"
   gather_facts: false
