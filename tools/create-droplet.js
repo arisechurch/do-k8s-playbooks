@@ -27,22 +27,29 @@ var argv = require('optimist')
   .alias('n', 'namespace')
   .default('namespace', process.env.DO_NAMESPACE || 'coreos')
 
+  .alias('h', 'hostname')
+
   .argv;
 
 var api = nautical.getClient({
   token: argv.token
 });
 
-var provhostOpts = {
-  namespace: argv.namespace,
-  groups: []
-};
-if (argv.master) {
-  provhostOpts.groups.push('master');
+var hostname = null;
+if (argv.hostname) {
+  hostname = argv.hostname;
 } else {
-  provhostOpts.groups.push('node');
+  var provhostOpts = {
+    namespace: argv.namespace,
+    groups: []
+  };
+  if (argv.master) {
+    provhostOpts.groups.push('master');
+  } else {
+    provhostOpts.groups.push('node');
+  }
+  hostname = provhost.stringify(provhostOpts);
 }
-var hostname = provhost.stringify(provhostOpts);
 
 if (argv.k) {
   argv.k = ('' + argv.k).split(',').map(function(keyId) {

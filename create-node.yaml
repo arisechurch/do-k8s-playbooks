@@ -6,25 +6,37 @@
     ansible_python_interpreter: "python"
   tasks:
 
-    - set_fact:
-        master_host: "{{hostvars[groups['master'][0]]}}"
+  - command: "tools/generate-hostname.js -n k8s"
+    register: "hostname"
+  - set_fact:
+      hostname: "{{hostname.stdout}}"
 
-    - template:
-        src: "templates/node.yaml.j2"
-        dest: "/tmp/user-data.yaml"
+  - set_fact:
+      master_host: "{{hostvars[groups['master'][0]]}}"
 
-    - command: >
-        tools/create-droplet.js
-        --ssh-keys {{do_ssh_keys}}
-        --region {{do_region}}
-        --size {{do_node_size}}
-        --user-data /tmp/user-data.yaml
-        --namespace k8s
-      register: "networks"
+  - file:
+      path: "tmp"
+      state: "directory"
+  - template:
+      src: "templates/node.yaml.j2"
+      dest: "tmp/{{hostname}}.yaml"
 
-    - set_fact:
-        networks: "{{networks.stdout | from_json}}"
+  - command: >
+      tools/create-droplet.js
+      --ssh-keys {{do_ssh_keys}}
+      --region {{do_region}}
+      --size {{do_node_size}}
+      --user-data tmp/{{hostname}}.yaml
+      --namespace k8s
+      --hostname {{hostname}}
+    register: "networks"
+    when: "do_create_droplets is defined and do_create_droplets"
 
-    - wait_for:
-        host: "{{networks.public.ip_address}}"
-        port: 22
+  - set_fact:
+      networks: "{{networks.stdout | from_json}}"
+    when: "do_create_droplets is defined and do_create_droplets"
+
+  - wait_for:
+      host: "{{networks.public.ip_address}}"
+      port: 22
+    when: "do_create_droplets is defined and do_create_droplets"

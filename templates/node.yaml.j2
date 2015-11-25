@@ -1,5 +1,12 @@
 #cloud-config
 write-files:
+{% if public_ip_address is defined %}
+  - path: /etc/environment
+    permissions: 0644
+    content: |
+      COREOS_PUBLIC_IPV4={{public_ip_address}}
+      COREOS_PRIVATE_IPV4={{private_ip_address}}
+{% endif %}
   - path: /opt/bin/wupiao
     permissions: '0755'
     content: |
@@ -13,6 +20,16 @@ write-files:
     permissions: '0644'
     content: |
       K8S_MASTER_IPV4={{master_host['private_ip_address']}}
+
+hostname: {{hostname}}
+
+{% if ssh_authorized_keys is defined and ssh_authorized_keys[0] is defined %}
+ssh_authorized_keys:
+{% for ssh_key in ssh_authorized_keys %}
+  - "{{ssh_key}}"
+{% endfor %}
+{% endif %}
+
 coreos:
   etcd2:
     listen-client-urls: http://0.0.0.0:2379,http://0.0.0.0:4001

@@ -2,3 +2,4 @@ node_modules/
 group_vars/all
 ssl-certs/*.key
 ssl-certs/*.crt
+tmp/

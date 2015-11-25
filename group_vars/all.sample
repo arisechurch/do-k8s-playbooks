@@ -1,9 +1,13 @@
 ---
 
+ssh_authorized_keys:
+  - "ssh-rsa .."
+
 do_ssh_keys: ""
 do_region: "sfo1"
 do_master_size: "1gb"
 do_node_size: "1gb"
+do_create_droplets: true
 
 ceph_fsid: "<uuid>"
 ceph_public_network: "10.134.0.0/16"

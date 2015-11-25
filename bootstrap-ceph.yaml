@@ -61,13 +61,13 @@
     - command: "docker run --rm -v /etc/ceph:/etc/ceph --net=host ceph/base 'bash /etc/ceph/scripts/monmap.sh'"
 
     - file:
-        path: "/tmp/ceph"
+        path: "tmp/ceph"
         state: "directory"
       delegate_to: "localhost"
 
     - synchronize:
         src: "/etc/ceph/"
-        dest: "/tmp/ceph"
+        dest: "tmp/ceph"
         mode: "pull"
       sudo: true
 
@@ -80,7 +80,7 @@
   tasks:
 
     - synchronize:
-        src: "/tmp/ceph/"
+        src: "tmp/ceph/"
         dest: "/etc/ceph"
       sudo: true
 
