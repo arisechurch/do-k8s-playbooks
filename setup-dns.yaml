@@ -6,13 +6,5 @@
     ansible_python_interpreter: "python"
   tasks:
 
-    - set_fact:
-        master_host: "{{hostvars[groups['master'][0]]}}"
-
-    - template:
-        src: "templates/dns-controller.yaml.j2"
-        dest: "tmp/dns-controller.yaml"
-
-    - command: "kubectl create -f tmp/dns-controller.yaml"
-
-    - command: "kubectl create -f templates/dns-service.yaml"
+    - command: "kubectl create -f tmp/dns-rc.yaml"
+    - command: "kubectl create -f templates/dns-svc.yaml"

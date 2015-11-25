@@ -2,15 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: kube-dns
-  namespace: default
+  namespace: kube-system
   labels:
     k8s-app: kube-dns
-    name: kube-dns
     kubernetes.io/cluster-service: "true"
+    kubernetes.io/name: "KubeDNS"
 spec:
   selector:
     k8s-app: kube-dns
-  clusterIP:  10.100.0.10
+  clusterIP: 10.100.0.10
   ports:
   - name: dns
     port: 53

@@ -33,10 +33,12 @@ ansible-playbook -i inventories/digitalocean.sh create-master.yaml; ./add-node.s
 export FLEETCTL_TUNNEL=<master-ip>
 fleetctl start services/master/*.service
 ssh -nNTL 8080:127.0.0.1:8080 core@<master-ip>
-./setup-dns.sh
+# Wait for apiserver to start
+ansible-playbook -i inventories/digitalocean.sh setup-dns.yaml
 fleetctl start services/node/*.service
 ansible-playbook -i inventories/digitalocean.sh bootstrap-ceph.yaml
 fleetctl start services/ceph/ceph-mon.service
+# Wait for monitors to start
 ansible-playbook -i inventories/digitalocean.sh create-ceph-osds.yaml
 fleetctl start services/ceph/*
 ```
