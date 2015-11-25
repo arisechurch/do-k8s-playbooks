@@ -1,3 +1,5 @@
 #!/bin/bash
 
-ansible-playbook -i inventories/digitalocean.sh setup-dns.yaml
+inventory="${1:-inventories/digitalocean.sh}"
+
+ansible-playbook -i "${inventory}" setup-dns.yaml

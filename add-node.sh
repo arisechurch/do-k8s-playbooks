@@ -1,4 +1,6 @@
 #!/bin/bash
 
-ansible-playbook -i inventories/digitalocean.sh create-node.yaml
-ansible-playbook -i inventories/digitalocean.sh prepare-cluster.yaml
+inventory="${1:-inventories/digitalocean.sh}"
+
+ansible-playbook -i "${inventory}" create-node.yaml
+ansible-playbook -i "${inventory}" prepare-cluster.yaml
