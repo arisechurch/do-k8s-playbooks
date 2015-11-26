@@ -4,101 +4,107 @@
   gather_facts: true
   tasks:
 
-    - file:
-        path: "/var/lib/ceph"
-        state: "directory"
-        mode: "0755"
-      sudo: true
+  - file:
+      path: "/var/lib/ceph"
+      state: "directory"
+      mode: "0755"
+    sudo: true
 
-    - file:
-        path: "/etc/ceph/scripts"
-        state: "directory"
-        mode: "0755"
-      sudo: true
+  - file:
+      path: "/etc/ceph/scripts"
+      state: "directory"
+      mode: "0755"
+    sudo: true
 
-    - lineinfile:
-        create: yes
-        state: "present"
-        dest: "/etc/modules-load.d/ceph.conf"
-        line: "ceph"
-      sudo: true
+  - lineinfile:
+      create: yes
+      state: "present"
+      dest: "/etc/modules-load.d/ceph.conf"
+      line: "ceph"
+    sudo: true
 
-    - modprobe:
-        state: "present"
-        name: "ceph"
-      sudo: true
+  - modprobe:
+      state: "present"
+      name: "ceph"
+    sudo: true
+
+  - copy:
+      src: "templates/rbd.sh"
+      dest: "/opt/bin/rbd"
+      mode: "755"
+    sudo: true
 
 
 - hosts: "node[0]"
   gather_facts: true
   tasks:
 
-    - template:
-        src: "templates/ceph.conf.j2"
-        dest: "/etc/ceph/ceph.conf"
-      sudo: true
+  - template:
+      src: "templates/ceph.conf.j2"
+      dest: "/etc/ceph/ceph.conf"
+    sudo: true
 
-    - template:
-        src: "templates/ceph-mds-entrypoint.sh.j2"
-        dest: "/etc/ceph/scripts/mds-entrypoint.sh"
-        mode: "0755"
-      sudo: true
+  - template:
+      src: "templates/ceph-mds-entrypoint.sh.j2"
+      dest: "/etc/ceph/scripts/mds-entrypoint.sh"
+      mode: "0755"
+    sudo: true
 
-    - template:
-        src: "templates/ceph-bootstrap.sh.j2"
-        dest: "/etc/ceph/scripts/bootstrap.sh"
-      sudo: true
+  - template:
+      src: "templates/ceph-bootstrap.sh.j2"
+      dest: "/etc/ceph/scripts/bootstrap.sh"
+    sudo: true
 
-    - template:
-        src: "templates/ceph-monmap.sh.j2"
-        dest: "/etc/ceph/scripts/monmap.sh"
-      sudo: true
+  - template:
+      src: "templates/ceph-monmap.sh.j2"
+      dest: "/etc/ceph/scripts/monmap.sh"
+    sudo: true
 
-    - command: "docker run --rm -v /etc/ceph:/etc/ceph -v /var/lib/ceph:/var/lib/ceph --net=host --entrypoint /bin/bash ceph/base /etc/ceph/scripts/bootstrap.sh"
-      args:
-        creates: "/etc/ceph/ceph.client.admin.keyring"
+  - command: "docker run --rm -v /etc/ceph:/etc/ceph -v /var/lib/ceph:/var/lib/ceph --net=host --entrypoint /bin/bash ceph/base /etc/ceph/scripts/bootstrap.sh"
+    args:
+      creates: "/etc/ceph/ceph.client.admin.keyring"
 
-    - command: "docker run --rm -v /etc/ceph:/etc/ceph --net=host ceph/base 'bash /etc/ceph/scripts/monmap.sh'"
+  - command: "docker run --rm -v /etc/ceph:/etc/ceph --net=host ceph/base 'bash /etc/ceph/scripts/monmap.sh'"
 
-    - file:
-        path: "tmp/ceph"
-        state: "directory"
-      delegate_to: "localhost"
+  - file:
+      path: "tmp/ceph"
+      state: "directory"
+    delegate_to: "localhost"
 
-    - synchronize:
-        src: "/etc/ceph/"
-        dest: "tmp/ceph"
-        mode: "pull"
-      sudo: true
+  - synchronize:
+      src: "/etc/ceph/"
+      dest: "tmp/ceph"
+      mode: "pull"
+    sudo: true
 
-    - command: "cat /etc/ceph/admin.secret"
-      register: "admin_key"
+  - command: "cat /etc/ceph/admin.secret"
+    register: "admin_key"
 
 
 - hosts: "node[1-99999]"
   gather_facts: true
   tasks:
 
-    - synchronize:
-        src: "tmp/ceph/"
-        dest: "/etc/ceph"
-      sudo: true
+  - synchronize:
+      src: "tmp/ceph/"
+      dest: "/etc/ceph"
+    sudo: true
 
 
 - hosts: "node"
   gather_facts: false
   tasks:
 
-    - set_fact:
-        admin_key: "{{hostvars[groups.node[0]].admin_key.stdout}}"
+  - set_fact:
+      admin_key: "{{hostvars[groups.node[0]].admin_key.stdout}}"
 
-    - template:
-        src: "templates/ceph-environment.j2"
-        dest: "/etc/ceph-environment"
-      sudo: true
+  - template:
+      src: "templates/ceph-environment.j2"
+      dest: "/etc/ceph-environment"
+    sudo: true
 
-    - copy:
-        src: "templates/cephfs-mount.sh"
-        dest: "/opt/bin/cephfs-mount"
-        mode: "755"
-      sudo: true
+  - copy:
+      src: "templates/cephfs-mount.sh"
+      dest: "/opt/bin/cephfs-mount"
+      mode: "755"
+    sudo: true
