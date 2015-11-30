@@ -48,21 +48,21 @@ fleetctl start services/ceph/*
 
 ### Load balance http pods
 
-Vulcand and romulus is run for you. You can load balance your service by adding
-some metadata to your service definition:
+A NGINX reverse proxy is run for you. You can balance your service using nginx
+by adding some metadata:
 
 ```yaml
 metadata:
   labels:
-    romulus/type: external
+    nginx/type: http
   annotations:
-    romulus/host: some.domain.com
+    nginx/host: some.domain.com
 ```
 
 Make sure to setup DNS for all of your nodes. It is recommended to create A
 records for each node, with a wildcard CNAME.
 
-The romulus repository can be found here: https://github.com/timelinelabs/romulus
+The proxy repository can be found here: https://github.com/ARISEChurch/kubernetes-reverseproxy
 
 
 ### Forward the master api port
@@ -96,6 +96,30 @@ fleetctl start services/ceph/*
 
 ### SSL keys and certs
 
-HTTP proxy layer is handled by `vulcand`. You can view there documentation
-around SSL certs here: http://vulcand.io/proxy.html#managing-certificates
+Create a kubernetes secret volume that contains base64 versions of your cert and
+key. You would then mount it to your container on the directory
+`/etc/nginx/ssl`.
 
+If your volume looked like:
+
+```yaml
+kind: Secret
+apiVersion: v1
+metadata:
+  name: ssl-cert
+data:
+  cert.crt: dmFsdWUtMg0KDQo=
+  key.key: dmFsdWUtMg0KDQo=
+```
+
+Then your service would look like:
+
+```yaml
+metadata:
+  labels:
+    nginx/type: http
+  annotations:
+    nginx/host: some.domain.com
+    nginx/sslCrt: cert.crt
+    nginx/sslKey: key.key
+```
