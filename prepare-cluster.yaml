@@ -31,9 +31,7 @@
   gather_facts: false
   tasks:
 
-  - lineinfile:
-      state: "present"
-      dest: "/etc/vulcand-env"
-      line: "VULCAND_SEAL_KEY={{vulcand_secret}}"
-      create: "yes"
+  - synchronize:
+      src: "ssl/"
+      dest: "/home/core/ssl/"
     sudo: true

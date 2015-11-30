@@ -96,23 +96,8 @@ fleetctl start services/ceph/*
 
 ### SSL keys and certs
 
-Create a kubernetes secret volume that contains base64 versions of your cert and
-key. You would then mount it to your container on the directory
-`/etc/nginx/ssl`.
-
-If your volume looked like:
-
-```yaml
-kind: Secret
-apiVersion: v1
-metadata:
-  name: ssl-cert
-data:
-  cert.crt: dmFsdWUtMg0KDQo=
-  key.key: dmFsdWUtMg0KDQo=
-```
-
-Then your service would look like:
+Add your ssl certs to the `ssl/` directory which will be synced to each host.
+You can then specify them using metadata:
 
 ```yaml
 metadata:
