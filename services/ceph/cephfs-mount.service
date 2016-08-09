@@ -1,6 +1,6 @@
 [Unit]
 Description=Ceph Filesystem mounter
-After=ceph-mds.service
+After=ceph-mds.service ceph-osd.service
 
 [Service]
 Type=oneshot

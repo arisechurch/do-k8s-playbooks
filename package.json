@@ -6,9 +6,11 @@
   },
   "author": "Tim Smart <tim.smart@arisechurch.com>",
   "dependencies": {
-    "async": "^1.5.0",
+    "async": "^2.0.1",
+    "co": "^4.6.0",
     "nautical": "^1.0.0",
     "optimist": "^0.6.1",
-    "provhost": "^0.1.0"
+    "provhost": "^0.1.0",
+    "vultr": "0.0.6"
   }
 }
