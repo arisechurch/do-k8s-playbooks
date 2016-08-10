@@ -42,6 +42,8 @@ coreos:
   flannel:
     interface: $private_ipv4
   units:
+    - name: etcd2.service
+      command: start
     - name: fleet.service
       command: start
     - name: flanneld.service
@@ -55,22 +57,6 @@ coreos:
             ExecStartPre=/usr/bin/etcdctl set /coreos.com/network/config '{"Network":"10.244.0.0/16", "Backend": {"Type": "vxlan"}}'
     - name: docker.service
       command: start
-      content: |
-        [Unit]
-        Description=Docker Application Container Engine
-        Documentation=http://docs.docker.com
-        After=docker.socket flanneld.service early-docker.target network.target
-        Requires=docker.socket flanneld.service early-docker.target
-
-        [Service]
-        EnvironmentFile=-/run/flannel_docker_opts.env
-        MountFlags=slave
-        LimitNOFILE=1048576
-        LimitNPROC=1048576
-        ExecStart=/usr/lib/coreos/dockerd --daemon --host=fd:// $DOCKER_OPTS $DOCKER_OPT_BIP $DOCKER_OPT_MTU $DOCKER_OPT_IPMASQ
-
-        [Install]
-        WantedBy=multi-user.target
     - name: setup-network-environment.service
       command: start
       content: |

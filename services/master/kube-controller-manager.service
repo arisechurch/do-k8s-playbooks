@@ -8,7 +8,7 @@ After=kube-apiserver.service
 ExecStartPre=/usr/bin/curl -L \
 	-o /opt/bin/kube-controller-manager \
 	-z /opt/bin/kube-controller-manager \
-	https://storage.googleapis.com/kubernetes-release/release/v1.1.2/bin/linux/amd64/kube-controller-manager
+	https://storage.googleapis.com/kubernetes-release/release/v1.3.4/bin/linux/amd64/kube-controller-manager
 ExecStartPre=/usr/bin/chmod +x /opt/bin/kube-controller-manager
 ExecStart=/opt/bin/kube-controller-manager \
 	--service-account-private-key-file=/opt/bin/kube-serviceaccount.key \
